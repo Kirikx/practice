@@ -1,7 +1,5 @@
 package ru.devstend.practice.one;
 
-import java.util.Map;
-
 interface Moveable { // Устаревшее употребление слова, рекомендуется применять 'Movable'
   void move();
 }
@@ -59,17 +57,22 @@ class LightWeightCar extends Car implements Moveable{ // возможно заб
   }
 
 }
-0 // лишний символ, будет ошибка при компиляции
-class Lorry extends Car, Moveable, Stopable { // множественное наследование запрещено, д.б. 'implements Moveable, Stopable'; Странное название
+//0 // лишний символ, будет ошибка при компиляции
+//class Lorry extends Car, Moveable, Stopable { // множественное наследование запрещено, д.б. 'implements Moveable, Stopable'; Странное название
+//
+//  public void move(){
+//    System.out.println("Car is moving");
+//  }
+//
+//  public void stop(){
+//    System.out.println("Car is stop");
+//  }
+//
+//  // нет переопределения абстрактного метода open()
+//}
 
-  public void move(){
-    System.out.println("Car is moving");
-  }
+// нет реализации класса Engine
+class Engine {
 
-  public void stop(){
-    System.out.println("Car is stop");
-  }
-
-  // нет переопределения абстрактного метода open()
 }
 
