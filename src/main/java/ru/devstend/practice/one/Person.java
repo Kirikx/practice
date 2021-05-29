@@ -118,7 +118,7 @@ public class Person {
     private int age;
     private String gender;
 
-    PersonBuilder() {
+    private PersonBuilder() {
     }
 
     public Person.PersonBuilder firstName(final String firstName) {
