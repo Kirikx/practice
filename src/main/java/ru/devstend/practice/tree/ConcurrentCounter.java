@@ -13,9 +13,12 @@ public class ConcurrentCounter {
 
   public void increment() {
     lock.lock();
-    ++count;
-    System.out.println(Thread.currentThread().getName() + " count=" + count );
-    lock.unlock();
+    try {
+      ++count;
+      System.out.println(Thread.currentThread().getName() + " count=" + count );
+    } finally {
+      lock.unlock();
+    }
   }
 
   public static void main(String[] args) {
