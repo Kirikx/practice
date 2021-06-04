@@ -139,6 +139,7 @@ VALUES ('9800c34d-df05-42c1-8a00-d3ce662cb4b0', 'e38ff68b-df13-45c9-bfbc-b0105f2
 -- Выводить надо колонки «фильм 1», «время начала», «длительность», «фильм 2», «время начала»,
 -- «длительность»;
 
+-- ? - идентификатор фильма по которому хотим узнать коллизии в сеансах
 with temp as (
     select f.name,
            s.time_begin,
@@ -146,6 +147,7 @@ with temp as (
            s.id s_id
     from cinema.film f
              join cinema.session s on f.id = s.film_id
+    where f.id = ?
 )
 select f1.name       "фильм 1",
        f1.time_begin "время начала",
@@ -161,6 +163,29 @@ from temp as f1
 -- - перерывы 30 минут и более между фильмами — выводить по уменьшению длительности перерыва. Колонки
 -- «фильм 1», «время начала», «длительность», «время начала второго фильма», «длительность перерыва»;
 
+-- для ясности добавил название второго фильма 'фильм 2'
+with temp as (
+    select f.name,
+           s.time_begin,
+           f.duration,
+           s.id s_id
+    from cinema.film f
+             join cinema.session s on f.id = s.film_id
+)
+select f1.name               "фильм 1",
+       f1.time_begin         "время начала",
+       f1.duration           "длительность",
+       f2.name               "фильм 2",
+       f2.time_begin         "время начала второго фильма",
+       (extract(epoch from
+                f2.time_begin - (f1.time_begin + (f1.duration || ' minutes')::interval)) /
+        3600)::numeric(5, 2) "длительность перерыва"
+from temp as f1
+         join temp as f2
+              on f2.time_begin - (f1.time_begin + (f1.duration || ' minutes')::interval) >
+                 (30 || ' minutes')::interval
+                  and f1.s_id != f2.s_id
+order by "длительность перерыва" desc
 
 -- - список фильмов, для каждого — с указанием общего числа посетителей за все время, среднего числа
 -- зрителей за сеанс и общей суммы сборов по каждому фильму (отсортировать по убыванию прибыли).
